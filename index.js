@@ -1,7 +1,14 @@
 var _ = require('lodash');
 
+module.exports = {
+    buildValidator: buildValidator,
+    ValidationError: ValidationError,
+    validString: validString,
+    validNumber: validNumber,
+    chain: chain
+};
 
-function invalid(description) {
+function buildValidator(description) {
     'use strict';
     var validator = {},
         must_have = [];
@@ -61,7 +68,7 @@ function abstractValid(value, type_func, type) {
                 return input;
             }
         } else {
-            return new ValidationError(key + " is not of required type " + type, key, input);
+            return new ValidationError((key || "Input") + " is not of required type " + type, key, input);
         }
     }
 }
