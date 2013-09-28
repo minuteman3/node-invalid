@@ -1,0 +1,24 @@
+{
+  "name": "invalid",
+  "version": "0.0.1",
+  "description": "Object field validation and manipulation module for NodeJS",
+  "main": "index.js",
+  "dependencies": {
+    "lodash": "~2.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/minuteman3/node-invalid.git"
+  },
+  "keywords": [
+    "validator",
+    "validation"
+  ],
+  "author": "Miles McGuire",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+}
