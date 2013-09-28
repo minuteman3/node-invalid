@@ -9,7 +9,8 @@ module.exports = {
     and: chain,
     conjunction: chain,
     or: disjunction,
-    disjunction: disjunction
+    disjunction: disjunction,
+    between: between
 };
 
 function buildValidator(description) {
@@ -61,6 +62,22 @@ function validString(value) {
 
 function validNumber(value) {
     return abstractValid(value, _.isNumber, "Number");
+}
+
+function _range(min, max) {
+    console.log(arguments, "range")
+    return function(input, key) {
+        console.log(arguments, "inner range");
+        if (min <= input && input < max) return input;
+        else return new ValidationError(input + " is not in valid range [" + min + "," + max +"]", key, input);
+    }
+}
+
+function between(min, max) {
+    console.log(arguments, "between");
+    return function(input, key) {
+        return maybe(_range(min,max))(validNumber()(input, key), key);
+    }
 }
 
 function abstractValid(value, type_func, type) {
