@@ -5,6 +5,7 @@ module.exports = {
     ValidationError: ValidationError,
     validString: validString,
     validNumber: validNumber,
+    validBoolean: validBoolean,
     chain: chain,
     and: chain,
     conjunction: chain,
@@ -64,6 +65,10 @@ function validNumber(value) {
     return abstractValid(value, _.isNumber, "Number");
 }
 
+function validBoolean(value) {
+    return abstractValid(value, _.isBoolean, "Boolean");
+}
+
 function _range(min, max) {
     console.log(arguments, "range")
     return function(input, key) {
@@ -83,7 +88,7 @@ function between(min, max) {
 function abstractValid(value, type_func, type) {
     return function(input, key) {
         if (type_func(input)) {
-            if (value && input !== value) {
+            if (value !== undefined && input !== value) {
                 return new ValidationError(input + " does not equal required value " + value, key, input);
             } else {
                 return input;
