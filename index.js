@@ -35,7 +35,7 @@ function buildValidator(description) {
         } else {
             _.forOwn(validator, function(valid_func, key) {
                 if (object.hasOwnProperty(key)) {
-                    object[key] = valid_func(object[key], key);
+                    object[key] = valid_func(object[key]);
                 }
             });
             if (_.any(object, is_validation_error)) {
@@ -47,8 +47,7 @@ function buildValidator(description) {
     };
 }
 
-function ValidationError(message, key, value) {
-    this.key = key;
+function ValidationError(message, value) {
     this.value = value;
     this.message = message;
 }
@@ -70,31 +69,26 @@ function validBoolean(value) {
 }
 
 function _range(min, max) {
-    console.log(arguments, "range")
-    return function(input, key) {
-        console.log(arguments, "inner range");
+    return function(input) {
         if (min <= input && input < max) return input;
-        else return new ValidationError(input + " is not in valid range [" + min + "," + max +"]", key, input);
+        else return new ValidationError(input + " is not in valid range [" + min + "," + max +"]", input);
     }
 }
 
 function between(min, max) {
-    console.log(arguments, "between");
-    return function(input, key) {
-        return maybe(_range(min,max))(validNumber()(input, key), key);
-    }
+    return chain(validNumber(), _range(min,max));
 }
 
 function abstractValid(value, type_func, type) {
-    return function(input, key) {
+    return function(input) {
         if (type_func(input)) {
             if (value !== undefined && input !== value) {
-                return new ValidationError(input + " does not equal required value " + value, key, input);
+                return new ValidationError(input + " does not equal required value " + value, input);
             } else {
                 return input;
             }
         } else {
-            return new ValidationError((key || "Input") + " is not of required type " + type, key, input);
+            return new ValidationError((key || "Input") + " is not of required type " + type, input);
         }
     }
 }
