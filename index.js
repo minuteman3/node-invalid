@@ -65,3 +65,18 @@ function abstractValid(value, type_func, type) {
         }
     }
 }
+
+function maybe(f) {
+    return function() {
+        if (arguments[0] instanceof ValidationError) return arguments[0];
+        else return f.apply(this, arguments);
+    }
+}
+
+function chain() {
+    var args = Array.prototype.slice.call(arguments);
+    args = args.map(function(func) {
+        return maybe(func);
+    });
+    return _.compose.apply(this, args.reverse());
+}
