@@ -5,7 +5,11 @@ module.exports = {
     ValidationError: ValidationError,
     validString: validString,
     validNumber: validNumber,
-    chain: chain
+    chain: chain,
+    and: chain,
+    conjunction: chain,
+    or: disjunction,
+    disjunction: disjunction
 };
 
 function buildValidator(description) {
@@ -86,4 +90,17 @@ function chain() {
         return maybe(func);
     });
     return _.compose.apply(this, args.reverse());
+}
+
+function disjunction() {
+    var args = Array.prototype.slice.call(arguments);
+    return function(input) {
+        var inputs = Array.prototype.slice.call(arguments);
+        args = _.map(args, function(func) {
+            return func.apply(this, inputs);
+        });
+        if (!_.all(args, is_validation_error)) {
+            return input;
+        } else return args;
+    }
 }
